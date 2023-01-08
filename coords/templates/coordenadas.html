@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Coocrdenadas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+     crossorigin=""/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script  src="https://code.jquery.com/jquery-3.6.1.min.js"  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="  crossorigin="anonymous"></script>
+</head>
+<body class="p-3 m-0 border-0">
+
+    <div class="card text-center">
+      <div class="card-header">
+        <h3><p class="text-center">Coordenadas de Cliente </p></h3>
+      </div>
+      <div class="card-body">
+         <div class="container mt-2 px-4 text-center">
+            <div class="row">
+                <div class="col">
+                    <form method="post">{% csrf_token %}
+
+                        {{ form.as_p }}
+
+                        <button id="buscar" type="submit" class="btn btn-primary is-success mt-2">Enviar</button>
+                        <img id="cargando" src="{% static 'img/loading.gif' %}" alt="Espere..." height="50px" width="50px">
+
+                    </form>
+
+                    {% if data %}
+
+
+                        <div class="card mt-5">
+                          <div class="card-body">
+
+                              <h5 class="card-subtitle mb-2 text-muted">Resultado:</h5>
+
+                              <div class="container px-5 my-5">
+                                <form id="contactForm">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="codigo" type="text" placeholder="Código" value="{{ data.servicio_sico }}" />
+                                        <label for="codigo">Código</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="cliente" type="text" placeholder="Cliente" value="{{ data.nombre_sico }}" />
+                                        <label for="cliente">Cliente</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="direccion" type="text" placeholder="Direccion" value="{{ data.direccion_sico }}" />
+                                        <label for="direccion">Direccion</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="agencia" type="text" placeholder="Agencia" value="{{ data.agencia_sico }}" />
+                                        <label for="agencia">Agencia</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="geocodigoRuta" type="text" placeholder="Geocodigo/Ruta" value="{{ data.geocod_sico }}" />
+                                        <label for="geocodigoRuta">Geocodigo/Ruta</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="medidor" type="text" placeholder="Medidor" value="{{ data.medidor_sico }}" />
+                                        <label for="medidor">Medidor</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="serie" type="text" placeholder="Serie" value="{{ data.serie_sico }}" />
+                                        <label for="serie">Serie</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="marca" type="text" placeholder="Marca" value="{{ data.marca_sico }}" />
+                                        <label for="serie">Marca</label>
+                                    </div>
+                                    {% if data.lat_c1 != 0 %}
+                                    <div class="card mt-5">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Coordenadas en {{ data.fecha1 }} </h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Medidor Encontrado {{ data.m_1 }} / {{ data.s_1 }} </h6>
+                                        <br>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="novedad1" type="text" placeholder="Novedad (1)" value="{{ data.nove_1 }}" />
+                                            <label for="novedad1">Novedad (1)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="x1" type="text" placeholder="X (1)" value="{{ data.x_c1 }}" />
+                                            <label for="x1">X (1)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="y1" type="text" placeholder="Y (1)" value="{{ data.y_c1 }}" />
+                                            <label for="y1">Y (1)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="latitud1" type="text" placeholder="Latitud (1)" value="{{ data.lat_c1 }}" />
+                                            <label for="latitud1">Latitud (1)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="longitud1" type="text" placeholder="Longitud (1)" value="{{ data.lng_c1 }}" />
+                                            <label for="longitud1">Longitud (1)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <pre>Enlaces Directos</pre>
+                                            <a href="https://osmand.net/go?lat={{ data.lat_c1 }}&lon={{ data.lng_c1 }}&z=17">Osmand</a><br>
+                                            <a href="https://www.google.com/maps?q={{ data.lat_c1 }},{{ data.lng_c1 }}&hl=es&gl=es&shorturl=1">Google Maps</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if data.lat_c2 != 0 %}
+                                    <div class="card mt-5">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Coordenadas en {{ data.fecha2 }} </h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Medidor Encontrado {{ data.m_2 }} / {{ data.s_2 }} </h6>
+                                        <br>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="novedad2" type="text" placeholder="Novedad (2)" value="{{ data.nove_2 }}" />
+                                            <label for="novedad2">Novedad (2)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="x2" type="text" placeholder="X (2)" value="{{ data.x_c2 }}" />
+                                            <label for="x2">X (2)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="y2" type="text" placeholder="Y (2)" value="{{ data.y_c2 }}" />
+                                            <label for="y2">Y (2)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="latitud2" type="text" placeholder="Latitud (2)" value="{{ data.lat_c2 }}" />
+                                            <label for="latitud2">Latitud (2)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="longitud2" type="text" placeholder="Longitud (2)" value="{{ data.lng_c2 }}" />
+                                            <label for="longitud2">Longitud (2)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <pre>Enlaces Directos</pre>
+                                            <a href="https://osmand.net/go?lat={{ data.lat_c2 }}&lon={{ data.lng_c2 }}&z=17">Osmand</a><br>
+                                            <a href="https://www.google.com/maps?q={{ data.lat_c2 }},{{ data.lng_c2 }}&hl=es&gl=es&shorturl=1">Google Maps</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {%  endif %}
+                                    {% if data.lat_c3 != 0 %}
+                                    <div class="card mt-5">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Coordenadas en {{ data.fecha3 }} </h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Medidor Encontrado {{ data.m_3 }} / {{ data.s_3 }} </h6>
+                                        <br>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="novedad3" type="text" placeholder="Novedad (3)" value="{{ data.nove_3 }}" />
+                                            <label for="novedad3">Novedad (3)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="x3" type="text" placeholder="X (3)" value="{{ data.x_c3 }}" />
+                                            <label for="x3">X (3)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="y3" type="text" placeholder="Y (3)" value="{{ data.y_c3 }}" />
+                                            <label for="y3">Y (3)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="latitud3" type="text" placeholder="Latitud (3)" value="{{ data.lat_c3 }}" />
+                                            <label for="latitud3">Latitud (3)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="longitud3" type="text" placeholder="Longitud (3)" value="{{ data.lng_c3 }}" />
+                                            <label for="longitud3">Longitud (3)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <pre>Enlaces Directos</pre>
+                                            <a href="https://osmand.net/go?lat={{ data.lat_c3 }}&lon={{ data.lng_c3 }}&z=17">Osmand</a><br>
+                                            <a href="https://www.google.com/maps?q={{ data.lat_c3 }},{{ data.lng_c3 }}&hl=es&gl=es&shorturl=1">Google Maps</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if data.lat_c4 != 0 %}
+                                    <div class="card mt-5">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Coordenadas en {{ data.fecha4 }} </h6>
+                                        <h6 class="card-subtitle mb-2 text-muted">Medidor Encontrado {{ data.m_4 }} / {{ data.s_4 }} </h6>
+                                        <br>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="novedad4" type="text" placeholder="Novedad (4)" value="{{ data.nove_4 }}" />
+                                            <label for="novedad4">Novedad (4)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="x4" type="text" placeholder="X (4)" value="{{ data.x_c4 }}" />
+                                            <label for="x4">X (4)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="y4" type="text" placeholder="Y (4)" value="{{ data.y_c4 }}" />
+                                            <label for="y4">Y (4)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="latitud4" type="text" placeholder="Latitud (4)" value="{{ data.lat_c4 }}" />
+                                            <label for="latitud4">Latitud (4)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="longitud4" type="text" placeholder="Longitud (4)" value="{{ data.lng_c4 }}" />
+                                            <label for="longitud4">Longitud (4)</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <pre>Enlaces Directos</pre>
+                                            <a href="https://osmand.net/go?lat={{ data.lat_c4 }}&lon={{ data.lng_c4 }}&z=17">Osmand</a><br>
+                                            <a href="https://www.google.com/maps?q={{ data.lat_c4 }},{{ data.lng_c4 }}&hl=es&gl=es&shorturl=1">Google Maps</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {% endif %}
+                                </form>
+                            </div>
+
+                          </div>
+                        </div>
+
+                        <div class="card mt-5">
+                            <div class="card-body" id="mapaJC" style="height: 400px;" >
+                            </div>
+                        </div>
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.2/leaflet.js"></script>
+
+                        <script src="{% static '/js/coordenadas/catiline.min.2.9.3.js' %}"></script>
+
+                        <script src="{% static '/js/coordenadas/leaflet.shpfile.js' %}"></script>
+
+                        <script>
+                            let lt = -1.1069;
+                            let lg = -80.5208;
+                            var m = L.map('mapaJC',{
+                                center: [lt,lg],
+                                zoom: 8,
+                                maxZoom: 20,
+                                minZoom: 9
+                            });
+
+
+
+                            var watercolor = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            }).addTo(m);
+
+                            var shpfile = new L.Shapefile("{% static '/js/coordenadas/shp_rutas_MAN.zip' %}", { //Excluded file for information security
+                                onEachFeature: function(feature, layer) {
+                                    if (feature.properties) {
+                                        layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                                            return k + ": " + feature.properties[k];
+                                        }).join("<br />"), {
+                                            maxHeight: 200
+                                        });
+                                    }
+                                }
+                            });
+                            shpfile.addTo(m);
+                            shpfile.once("data:loaded", function() {
+                                console.log("finished loaded shapefile");
+                            });
+
+                            {% if data.lat_c1 != 0 %}
+
+                                L.marker([{{ data.lat_c1 }}, {{ data.lng_c1 }}]).addTo(m)
+                                .bindPopup('Coordenada (1)<br> {{ data.fecha1 }}')
+                                .openPopup();
+
+                            {% endif %}
+
+                            {% if data.lat_c2 != 0 %}
+
+                                L.marker([{{ data.lat_c2 }}, {{ data.lng_c2 }}]).addTo(m)
+                                .bindPopup('Coordenada (2)<br> {{ data.fecha2 }}')
+                                .openPopup();
+
+                            {% endif %}
+
+                            {% if data.lat_c3 != 0 %}
+
+                                L.marker([{{ data.lat_c3 }}, {{ data.lng_c3 }}]).addTo(m)
+                                .bindPopup('Coordenada (3)<br> {{ data.fecha3 }}')
+                                .openPopup();
+
+                            {% endif %}
+
+                            {% if data.lat_c4 != 0 %}
+
+                                L.marker([{{ data.lat_c4 }}, {{ data.lng_c4 }}]).addTo(m)
+                                .bindPopup('Coordenada (4)<br> {{ data.fecha4 }}')
+                                .openPopup();
+
+                            {% endif %}
+                        </script>
+
+
+
+                        <div class="row">
+
+                            <div class="col">
+
+                                <button class="btn btn-primary is-success mt-5" onclick="window.location.href = '/coor'">Buscar Otra Coordenada</button>
+
+
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+         </div>
+      </div>
+
+
+
+      <div class="card-footer text-muted">
+        By: Jhonsson Córdova D.
+      </div>
+
+    </div>
+
+    <script>
+
+    $.when( $.ready ).then(function() {
+        $( "#cargando" ).hide();
+
+        $("#buscar").click(function () {
+            $( "#cargando" ).show();
+            $("#buscar").hide();
+        })
+
+        $( "select" )
+          .change(function () {
+            var str = "";
+            $( "select option:selected" ).each(function() {
+              str += $( this ).text() + " ";
+            });
+
+            if (str === "Medidor "){
+                let sel = $("#id_servicio_sico");
+                sel.val('');
+                sel.parent().hide();
+
+                let act = $("#id_medidor_bpm");
+                act.parent().show();
+            }
+            if (str === "Código "){
+                let sel = $("#id_medidor_bpm");
+                sel.val('');
+                sel.parent().hide();
+
+                let act = $("#id_servicio_sico");
+                act.parent().show();
+
+            }
+
+          })
+          .change();
+
+    });
+    </script>
+
+
+</body>
+</html>

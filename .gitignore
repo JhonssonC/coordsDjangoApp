@@ -1,0 +1,4 @@
+/db.sqlite3
+/venv/*.*
+/static/js/coordenadas/shp_rutas_MAN.zip
+/coords/migrations/*.*
