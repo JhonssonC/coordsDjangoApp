@@ -12,4 +12,6 @@ For Maps [Leaflet](https://leafletjs.com/)
 
 ## Final Test:
 
-![Imgur](https://i.imgur.com/eVh21Hel.gif)
+![Imgur](https://i.imgur.com/P8m3A0fl.gif)
+
+[View](https://i.imgur.com/P8m3A0f.gifv)
